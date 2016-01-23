@@ -2,6 +2,7 @@ package com.abyod.service;
 
 import java.io.File;
 
+import com.abyod.utils.Utils;
 import com.abyod.videocompressor.AudioAttributes;
 import com.abyod.videocompressor.Encoder;
 import com.abyod.videocompressor.EncoderException;
@@ -11,7 +12,6 @@ import com.abyod.videocompressor.InputFormatException;
 import com.abyod.videocompressor.MultimediaInfo;
 import com.abyod.videocompressor.VideoAttributes;
 import com.abyod.videocompressor.VideoSize;
-import com.fileupload.Utils;
 
 public class VideoCompressorService {
 
@@ -39,9 +39,9 @@ public class VideoCompressorService {
 		}
 	};
 	
-	public File encodeTOFlv(String sourceFileName) throws IllegalArgumentException, InputFormatException, EncoderException{
+	public File encodeTOFlv(String sourceFileName, String outputDirectory) throws IllegalArgumentException, InputFormatException, EncoderException{
 		File source = new File(sourceFileName);
-		File target = new File(source.getAbsoluteFile().getParentFile()+File.separator + Utils.getBaseName(source.getName())+"_converted.flv");
+		File target = new File(outputDirectory + File.separator + Utils.getBaseName(source.getName())+"_converted.flv");
 		AudioAttributes audio = new AudioAttributes();
 		audio.setCodec("libmp3lame");
 		audio.setBitRate(new Integer(64000));
@@ -63,9 +63,9 @@ public class VideoCompressorService {
 
 	}
 
-	public File encodeTOWav(String sourceFileName) throws IllegalArgumentException, InputFormatException, EncoderException{	
+	public File encodeTOWav(String sourceFileName, String outputDirectory ) throws IllegalArgumentException, InputFormatException, EncoderException{	
 		File source = new File(sourceFileName);
-		File target = new File(source.getAbsoluteFile().getParentFile()+File.separator+ Utils.getBaseName(source.getName())+"_converted.wav");		
+		File target = new File(outputDirectory + File.separator+ Utils.getBaseName(source.getName())+"_converted.wav");		
 		AudioAttributes audio = new AudioAttributes();
 		audio.setCodec("pcm_s16le");
 		EncodingAttributes attrs = new EncodingAttributes();
@@ -77,9 +77,9 @@ public class VideoCompressorService {
 		return target;
 	}
 
-	public File encodeToMp3(String sourceFileName) throws IllegalArgumentException, InputFormatException, EncoderException{
+	public File encodeToMp3(String sourceFileName, String outputDirectory) throws IllegalArgumentException, InputFormatException, EncoderException{
 		File source = new File(sourceFileName);
-		File target = new File(source.getAbsoluteFile().getParentFile()+File.separator+Utils.getBaseName(source.getName())+".mp3");
+		File target = new File(outputDirectory + File.separator+Utils.getBaseName(source.getName())+".mp3");
 		AudioAttributes audio = new AudioAttributes();
 		audio.setCodec("libmp3lame");
 		audio.setBitRate(new Integer(128000));
@@ -94,9 +94,9 @@ public class VideoCompressorService {
 		return target;
 	}
 
-	public File encodeTOAvi(String sourceFileName) throws IllegalArgumentException, InputFormatException, EncoderException{
+	public File encodeTOAvi(String sourceFileName, String outputDirectory) throws IllegalArgumentException, InputFormatException, EncoderException{
 		File source = new File(sourceFileName);
-		File target = new File(source.getAbsoluteFile().getParentFile()+File.separator+Utils.getBaseName(source.getName())+"_converted.avi");
+		File target = new File(outputDirectory + File.separator+Utils.getBaseName(source.getName())+"_converted.avi");
 		AudioAttributes audio = new AudioAttributes();
 		audio.setCodec("libmp3lame");
 		audio.setBitRate(new Integer(56000));
@@ -114,9 +114,9 @@ public class VideoCompressorService {
 		return target;
 	}
 
-	public File encodeToMpeg4(String sourceFileName) throws IllegalArgumentException, InputFormatException, EncoderException{
+	public File encodeToMpeg4(String sourceFileName, String outputDirectory) throws IllegalArgumentException, InputFormatException, EncoderException{
 		File source = new File(sourceFileName);
-		File target = new File(source.getAbsoluteFile().getParentFile()+File.separator+Utils.getBaseName(source.getName())+"_converted.avi");
+		File target = new File(outputDirectory + File.separator+Utils.getBaseName(source.getName())+"_converted.avi");
 		AudioAttributes audio = new AudioAttributes();
 		audio.setCodec("libvorbis");
 		VideoAttributes video = new VideoAttributes();
@@ -134,9 +134,9 @@ public class VideoCompressorService {
 		return target;
 	}
 
-	public File encodeTo3GP(String sourceFileName) throws IllegalArgumentException, InputFormatException, EncoderException{
+	public File encodeTo3GP(String sourceFileName, String outputDirectory) throws IllegalArgumentException, InputFormatException, EncoderException{
 		File source = new File(sourceFileName);
-		File target = new File(source.getAbsoluteFile().getParentFile()+File.separator+Utils.getBaseName(source.getName())+"_converted.3gp");
+		File target = new File(outputDirectory + File.separator+Utils.getBaseName(source.getName())+"_converted.3gp");
 		AudioAttributes audio = new AudioAttributes();
 		audio.setCodec("libfaac");
 		audio.setBitRate(new Integer(128000));
@@ -161,8 +161,8 @@ public class VideoCompressorService {
 		return new String[]{"FLV","MP3","AVI","Mpeg4","3GP"};
 	}
 
-	public static void deleteFile(String directory, String fileName) {
-		new File(directory, fileName).delete();
+	public static Boolean deleteFile(String directory, String fileName) {
+		return new File(directory, fileName).delete();
 		
 	}
 

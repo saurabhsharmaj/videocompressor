@@ -1,46 +1,42 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" id="WebApp_ID" version="2.5">
-  <display-name>Video Compressor</display-name>
-  <welcome-file-list>
-    <welcome-file>index.jsp</welcome-file>
-  </welcome-file-list>
-  <servlet>
-    <servlet-name>UploadFile</servlet-name>
-    <servlet-class>com.fileupload.UploadFile</servlet-class>
-  </servlet>
-  <servlet-mapping>
-    <servlet-name>UploadFile</servlet-name>
-    <url-pattern>/UploadFile</url-pattern>
-  </servlet-mapping>
-  <servlet>
-    <servlet-name>ExistingFile</servlet-name>
-    <servlet-class>com.fileupload.AvailbleFiles</servlet-class>
-  </servlet>
-  <servlet-mapping>
-    <servlet-name>ExistingFile</servlet-name>
-    <url-pattern>/existingFile</url-pattern>
-  </servlet-mapping>
-  
-  <servlet>
-    <servlet-name>CommonAction</servlet-name>
-    <servlet-class>com.abyod.servlet.CommonActionServlet</servlet-class>
-  </servlet>
-  <servlet-mapping>
-    <servlet-name>CommonAction</servlet-name>
-    <url-pattern>/commonAction</url-pattern>
-  </servlet-mapping>
-  
-  
-  <filter>
-    <filter-name>readDirectoryFilter</filter-name>
-    <filter-class>com.fileupload.ReadDirectoryFilter</filter-class>
-    <init-param>
-      <param-name>uploadDir</param-name>
-      <param-value>/opt/uploadfiles/</param-value>
-    </init-param>
-  </filter>
-  <filter-mapping>
-    <filter-name>readDirectoryFilter</filter-name>
-    <url-pattern>/*</url-pattern>
-  </filter-mapping>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns="http://java.sun.com/xml/ns/javaee"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
+	id="WebApp_ID" version="2.5">
+	<display-name>Video Compressor</display-name>
+	<welcome-file-list>
+		<welcome-file>index.jsp</welcome-file>
+	</welcome-file-list>
+	<servlet>
+		<servlet-name>UploadFile</servlet-name>
+		<servlet-class>com.abyod.servlet.UploadFileServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>UploadFile</servlet-name>
+		<url-pattern>/UploadFile</url-pattern>
+	</servlet-mapping>
+
+
+	<servlet>
+		<servlet-name>CommonAction</servlet-name>
+		<servlet-class>com.abyod.servlet.CommonActionServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>CommonAction</servlet-name>
+		<url-pattern>/commonAction</url-pattern>
+	</servlet-mapping>
+
+
+	<filter>
+		<filter-name>readDirectoryFilter</filter-name>
+		<filter-class>com.abyod.filter.SetUpDirectoryFilter</filter-class>
+		<init-param>
+			<param-name>uploadDir</param-name>
+			<param-value>/opt/uploadfiles/</param-value>
+		</init-param>
+	</filter>
+	<filter-mapping>
+		<filter-name>readDirectoryFilter</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
 </web-app>

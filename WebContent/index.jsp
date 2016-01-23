@@ -13,6 +13,7 @@
   <script src="js/pretty-doughtnut.js"></script>
 <script type="text/javascript">
 $( document ).ready(function() {
+	
 	$('#message').html('');
 	$('#result').html('');
 	$.ajax({url: "commonAction?action=format", success: function(response){
@@ -23,19 +24,48 @@ $( document ).ready(function() {
 	}
 	});
 	
-	$.ajax({url: "existingFile", success: function(response){
-		$('#filestableBody').html('');
+	$.ajax({url: "commonAction?action=getfiles&type=src", success: function(response){
+		$('#srcfilestableBody').html('');
 		var data='';
+		if(response===''){
+			data += '<tr>'+
+						'<td colspan="4" align="center">No Flie Available.</td>'+			
+					'</tr>';
+		} else {
 		response.replace(/,\s*$/, "").split(',').forEach(function(fileName) {
 			data += '<tr>'+
 						'<td><input type="checkbox"/></td>'+
 						'<td>'+fileName.split('#')[0]+'</td>'+						
 						'<td>'+fileName.split('#')[1]+'</td>'+
-						'<td><img src="images/trash.png" onclick="deleteFile(this);" title="delete file" /></td>'+
-						'<td><img src="images/compress.png" title="compress file" onclick="compress(this);" /></td>'+
+						'<td><img src="images/trash.png" onclick="deleteFile(this,\'src\');" title="delete file" />'+
+						'&nbsp;&nbsp;<img src="images/compress.png" title="compress file" onclick="compress(this);" /></td>'+
 					'</tr>';
 		});
-		$('#filestableBody').append(data);
+		}
+		$('#srcfilestableBody').append(data);
+		$("tbody tr:even").css("background-color", "#CCCCCC");
+    }});
+	
+	
+	$.ajax({url: "commonAction?action=getfiles&type=target", success: function(response){
+		$('#targetfilestableBody').html('');
+		var data='';
+		if(response===''){
+			data += '<tr>'+
+						'<td colspan="4" align="center">No Flie Available.</td>'+			
+					'</tr>';
+		} else {
+			response.replace(/,\s*$/, "").split(',').forEach(function(fileName) {
+				data += '<tr>'+
+							'<td><input type="checkbox"/></td>'+
+							'<td>'+fileName.split('#')[0]+'</td>'+						
+							'<td>'+fileName.split('#')[1]+'</td>'+
+							'<td><img src="images/trash.png" onclick="deleteFile(this,\'target\');" title="delete file" /></td>'+							
+						'</tr>';
+			});
+		}
+		$('#targetfilestableBody').append(data);
+		$("tbody tr:even").css("background-color", "#CCCCCC");
     }});
 	
 	
@@ -50,8 +80,8 @@ $( document ).ready(function() {
 		  };
 });
 
-function deleteFile(ref){
-	ConfirmDeleteDialog(ref, 'Are you sure?');
+function deleteFile(ref,type){
+	ConfirmDeleteDialog(ref, 'Are you sure?',type);
 	
 }
 
@@ -96,7 +126,7 @@ function convertVideo(){
 	
 }
 
-function ConfirmDeleteDialog(ref, message){
+function ConfirmDeleteDialog(ref, message,type){
 	
     $('<div></div>').appendTo('body')
                     .html('<div><h6>'+message+'?</h6></div>')
@@ -106,10 +136,20 @@ function ConfirmDeleteDialog(ref, message){
                         buttons: {
                             Yes: function () {
                             	$(this).dialog("close");
-                            	var fileName = $(ref).closest('td').prev().html();
-                            	$.ajax({url: "commonAction?action=delete&fileName="+fileName, success: function(response){
+                            	var fileName = $(ref).closest('tr').find('td').eq(1).html();
+                            	$.ajax({url: "commonAction?action=delete&fileName="+fileName+"&type="+type, success: function(response){
                             		$('#message').html(fileName+ 'has been deleted.');
-                            		$(ref).closest('tr').remove();
+                            		
+                            		
+                            		if($(ref).closest('tbody > tr').siblings().length == 0){
+                            			$(ref).closest('tbody').append(
+					                            					'<tr>'+
+					                        							'<td colspan="4" align="center">No Flie Available.</td>'+			
+					                        						'</tr>');
+                            			$(ref).closest('tr').remove();
+                            		} else {
+                            			$(ref).closest('tr').remove();
+                            		}
                             		
                             	}});
                                 
@@ -160,19 +200,23 @@ function ConfirmDeleteDialog(ref, message){
 	<fieldset>
 	<legend>Source Files</legend>
 		<table >
-			<tr><th>Select</th><th>FileName</th><th>Actual Size</th><th>Delete</th><th>Compress</th></tr>
-		<tbody id="filestableBody">
-			<tr><td colspan="5" align="center"> No file Available</td></tr>
+		<thead>
+			<tr><th>Select</th><th>FileName</th><th>Actual Size</th><th>Actions</th></tr>
+		</thead>
+		<tbody id="srcfilestableBody">
+			<tr><td colspan="4" align="center"> No file Available</td></tr>
 		</tbody>
 		</table>
 	</fieldset>
-
+<br><br>
 	<fieldset>
 	<legend>Compress Files</legend>
 		<table >
-			<tr><th>Select</th><th>FileName</th><th>Delete</th><th>Before Size</th><th>After Size</th><th>Action</th></tr>
-		<tbody id="compressFilesTableBody">
-			<tr><td colspan="5" align="center"> No file Available</td></tr>
+		<thead>
+			<tr><th>Select</th><th>FileName</th><th>Compress  Size</th><th>Actions</th></tr>
+		</thead>
+		<tbody id="targetfilestableBody">
+			<tr><td colspan="4" align="center"> No file Available</td></tr>
 		</tbody>
 		</table>
 	</fieldset>

@@ -1,4 +1,4 @@
-package com.fileupload;
+package com.abyod.servlet;
 
 import java.io.File;
 import java.io.FilenameFilter;
@@ -15,8 +15,15 @@ import org.apache.commons.fileupload.FileItemFactory;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.commons.io.FilenameUtils;
+import org.apache.log4j.Logger;
 
-public class UploadFile extends HttpServlet {
+import com.abyod.utils.Utils;
+import com.abyod.utils.VideoCompressorConstant;
+
+public class UploadFileServlet extends HttpServlet {
+	
+	Logger logger = Logger.getLogger(UploadFileServlet.class);
+	
 	private static final long serialVersionUID = 1L;	
 
 	protected void doPost(HttpServletRequest request,
@@ -33,7 +40,7 @@ public class UploadFile extends HttpServlet {
 			try {
 				// Parse the request
 				List<FileItem> multiparts = upload.parseRequest(request);
-				File dir = new File((String) request.getAttribute("uploadDirectory"));
+				File dir = new File((String) request.getAttribute(VideoCompressorConstant.SOURCE_DIRECTORY));
 				dir.mkdir();
 				for (FileItem item : multiparts) {
 					if (!item.isFormField()) {
@@ -42,9 +49,9 @@ public class UploadFile extends HttpServlet {
 						item.write(new File(dir,name));
 					}
 				}
+				logger.info("File uploaded successfully over server.");
 				response.getWriter().write(Utils.convertTOString(dir.listFiles()));
-			} 
-			catch (Exception e) 
+			} catch (Exception e) 
 			{
 				System.out.println("File upload failed");
 			}
