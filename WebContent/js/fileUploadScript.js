@@ -31,12 +31,25 @@ var options = {
 	
 	complete : function(response) {
 		$("#message").html("<font color='blue'>Your file has been uploaded!</font>");
-		$('#filestableBody').html('');
+		$('#srcfilestableBody').html('');
 		var data='';
+		if(response.responseText===''){
+			data += '<tr>'+
+						'<td colspan="4" align="center">No Flie Available.</td>'+			
+					'</tr>';
+		} else {
 		response.responseText.replace(/,\s*$/, "").split(',').forEach(function(fileName) {
-			data += '<tr><td><input type="checkbox"/></td><td>'+fileName+'</td><td> <img src="images/trash.png" onclick="deleteFile(this);" /> &nbsp; <img src="images/compress.png" onclick="compress(this);" /></td></tr>';
+			data += '<tr>'+
+						'<td><input type="checkbox"/></td>'+
+						'<td>'+fileName.split('#')[0]+'</td>'+						
+						'<td>'+fileName.split('#')[1]+'</td>'+
+						'<td><img src="images/trash.png" onclick="deleteFile(this,\'src\');" title="delete file" />'+
+						'&nbsp;&nbsp;<img src="images/compress.png" title="compress file" onclick="compress(this);" /></td>'+
+					'</tr>';
 		});
-		$('#filestableBody').append(data);
+		}
+		$('#srcfilestableBody').append(data);
+		$("tbody tr:even").css("background-color", "#CCCCCC");
 	},
 	error : function() {
 		$("#message").html("<font color='red'> ERROR: unable to upload files</font>");

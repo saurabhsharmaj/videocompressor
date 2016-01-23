@@ -109,12 +109,17 @@ function convertVideo(){
 			      }
 			    }});
 		      
+		      if(parseInt(data) == 100){
+		    	  refreshOutputTable();		    	  
+		      }
 		    },
 		    complete: function(data) {
 		      // Schedule the next request when the current one's complete
 		      console.log(parseInt(data.responseText) == 100);
-		      if(parseInt(data.responseText) == 100){
-		    	  clearTimeout(timeoutID);
+		      if(parseInt(data.responseText) == 100){		    	  
+		    	  clearTimeout(timeoutID,function(){
+		    		  refreshOutputTable();
+		    	  });
 		      } else {
 		      	timeoutID = setTimeout(worker, 1000);
 		      }
@@ -123,9 +128,33 @@ function convertVideo(){
 		})();
 	
 	window.location.href = "commonAction?action=convert&fileName="+fileName+"&format="+format;
-	
+	refreshOutputTable();
 }
 
+function refreshOutputTable(){
+	
+	$.ajax({url: "commonAction?action=getfiles&type=target", success: function(response){		 
+			$('#targetfilestableBody').html('');
+			var data='';
+			if(response===''){
+				data += '<tr>'+
+							'<td colspan="4" align="center">No Flie Available.</td>'+			
+						'</tr>';
+			} else {
+				response.replace(/,\s*$/, "").split(',').forEach(function(fileName) {
+					data += '<tr>'+
+								'<td><input type="checkbox"/></td>'+
+								'<td>'+fileName.split('#')[0]+'</td>'+						
+								'<td>'+fileName.split('#')[1]+'</td>'+
+								'<td><img src="images/trash.png" onclick="deleteFile(this,\'target\');" title="delete file" /></td>'+							
+							'</tr>';
+				});
+			}
+			$('#targetfilestableBody').append(data);
+			$("tbody tr:even").css("background-color", "#CCCCCC");
+	    }});
+	
+}
 function ConfirmDeleteDialog(ref, message,type){
 	
     $('<div></div>').appendTo('body')
@@ -210,7 +239,7 @@ function ConfirmDeleteDialog(ref, message,type){
 	</fieldset>
 <br><br>
 	<fieldset>
-	<legend>Compress Files</legend>
+	<legend>Compress Files &nbsp;<buttion class="btn" onclick="refreshOutputTable();">Refresh</buttion></legend>
 		<table >
 		<thead>
 			<tr><th>Select</th><th>FileName</th><th>Compress  Size</th><th>Actions</th></tr>
