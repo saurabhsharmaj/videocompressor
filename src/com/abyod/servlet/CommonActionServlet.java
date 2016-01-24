@@ -15,6 +15,7 @@ import org.apache.log4j.Logger;
 import com.abyod.service.VideoCompressorService;
 import com.abyod.utils.Utils;
 import com.abyod.utils.VideoCompressorConstant;
+import com.google.gson.Gson;
 
 
 public class CommonActionServlet extends HttpServlet {
@@ -82,7 +83,7 @@ public class CommonActionServlet extends HttpServlet {
 					dir = new File((String) request.getAttribute(VideoCompressorConstant.OUTPUT_DIRECTORY));
 					
 				}				
-				response.getWriter().write(dir!=null?Utils.convertTOString(dir.listFiles()):"");
+				response.getWriter().write(dir!=null?new Gson().toJson(Utils.readFiles(dir)):"");
 			} else {
 				response.getWriter().append(request.getContextPath());
 			}

@@ -26,17 +26,18 @@ $( document ).ready(function() {
 	
 	$.ajax({url: "commonAction?action=getfiles&type=src", success: function(response){
 		$('#srcfilestableBody').html('');
-		var data='';
-		if(response===''){
+		var data=JSON.parse(response);
+		if(data.length===0){
 			data += '<tr>'+
-						'<td colspan="4" align="center">No Flie Available.</td>'+			
+						'<td colspan="5" align="center">No Flie Available.</td>'+			
 					'</tr>';
 		} else {
-		response.replace(/,\s*$/, "").split(',').forEach(function(fileName) {
+		data.forEach(function(file) {
 			data += '<tr>'+
 						'<td><input type="checkbox"/></td>'+
-						'<td>'+fileName.split('#')[0]+'</td>'+						
-						'<td>'+fileName.split('#')[1]+'</td>'+
+						'<td>'+file.fileName+'</td>'+						
+						'<td>'+file.sizeInString+'</td>'+
+						'<td>'+file.lastModifiedTime+'</td>'+
 						'<td><img src="images/trash.png" onclick="deleteFile(this,\'src\');" title="delete file" />'+
 						'&nbsp;&nbsp;<img src="images/compress.png" title="compress file" onclick="compress(this);" /></td>'+
 					'</tr>';
@@ -49,21 +50,25 @@ $( document ).ready(function() {
 	
 	$.ajax({url: "commonAction?action=getfiles&type=target", success: function(response){
 		$('#targetfilestableBody').html('');
-		var data='';
-		if(response===''){
+		var data=JSON.parse(response);
+		
+		if(data.length===0){
 			data += '<tr>'+
-						'<td colspan="4" align="center">No Flie Available.</td>'+			
+						'<td colspan="5" align="center">No Flie Available.</td>'+			
 					'</tr>';
 		} else {
-			response.replace(/,\s*$/, "").split(',').forEach(function(fileName) {
+			data.forEach(function(file) {
 				data += '<tr>'+
 							'<td><input type="checkbox"/></td>'+
-							'<td>'+fileName.split('#')[0]+'</td>'+						
-							'<td>'+fileName.split('#')[1]+'</td>'+
-							'<td><img src="images/trash.png" onclick="deleteFile(this,\'target\');" title="delete file" /></td>'+							
+							'<td>'+file.fileName+'</td>'+						
+							'<td>'+file.sizeInString+'</td>'+
+							'<td>'+file.lastModifiedTime+'</td>'+
+							'<td><img src="images/trash.png" onclick="deleteFile(this,\'target\');" title="delete file" />'+
+							'&nbsp;&nbsp;<img src="images/compress.png" title="compress file" onclick="compress(this);" /></td>'+
 						'</tr>';
 			});
 		}
+		
 		$('#targetfilestableBody').append(data);
 		$("tbody tr:even").css("background-color", "#CCCCCC");
     }});
@@ -133,24 +138,27 @@ function convertVideo(){
 
 function refreshOutputTable(){
 	
-	$.ajax({url: "commonAction?action=getfiles&type=target", success: function(response){		 
-			$('#targetfilestableBody').html('');
-			var data='';
-			if(response===''){
+	$.ajax({url: "commonAction?action=getfiles&type=target", success: function(response){		
+		
+		var data=JSON.parse(response);
+				
+		if(data.length===0){
+			data += '<tr>'+
+						'<td colspan="5" align="center">No Flie Available.</td>'+			
+					'</tr>';
+		} else {
+			data.forEach(function(file) {
 				data += '<tr>'+
-							'<td colspan="4" align="center">No Flie Available.</td>'+			
+							'<td><input type="checkbox"/></td>'+
+							'<td>'+file.fileName+'</td>'+						
+							'<td>'+file.sizeInString+'</td>'+
+							'<td>'+file.lastModifiedTime+'</td>'+
+							'<td><img src="images/trash.png" onclick="deleteFile(this,\'target\');" title="delete file" />'+
+							'&nbsp;&nbsp;<img src="images/compress.png" title="compress file" onclick="compress(this);" /></td>'+
 						'</tr>';
-			} else {
-				response.replace(/,\s*$/, "").split(',').forEach(function(fileName) {
-					data += '<tr>'+
-								'<td><input type="checkbox"/></td>'+
-								'<td>'+fileName.split('#')[0]+'</td>'+						
-								'<td>'+fileName.split('#')[1]+'</td>'+
-								'<td><img src="images/trash.png" onclick="deleteFile(this,\'target\');" title="delete file" /></td>'+							
-							'</tr>';
-				});
-			}
-			$('#targetfilestableBody').append(data);
+			});
+		}
+			$('#targetfilestableBody').html(data);
 			$("tbody tr:even").css("background-color", "#CCCCCC");
 	    }});
 	
@@ -192,6 +200,10 @@ function ConfirmDeleteDialog(ref, message,type){
                         }
                     });
     };
+    
+    function home(){
+    	window.location = "http://localhost:8080/videocompressor/";
+    }
 </script>
 <!-- Include css styles here -->
 <link rel="stylesheet" href="css/jquery-ui.css">
@@ -199,7 +211,7 @@ function ConfirmDeleteDialog(ref, message,type){
 </head>
 <body>
 <div id="logo"><img src="images/logo.jpg" alter="Jecrc University"></div>
-	<h3>Compress Your Video</h3>
+	<h3>Compress Your Video <button class="btn" onclick="home();">Home</button></h3>
 	
 	<div id="dialog" title="Basic dialog">
 	  <p>Select Output Format : </p>
@@ -216,7 +228,6 @@ function ConfirmDeleteDialog(ref, message,type){
 		enctype="multipart/form-data">
 		<input type="file" size="60" id="myfile" name="myfile"> <input
 			type="submit" value="Upload">
-
 		<div id="progressbox">
 			<div id="progressbar"></div>
 			<div id="percent">0%</div>
@@ -230,7 +241,7 @@ function ConfirmDeleteDialog(ref, message,type){
 	<legend>Source Files</legend>
 		<table >
 		<thead>
-			<tr><th>Select</th><th>FileName</th><th>Actual Size</th><th>Actions</th></tr>
+			<tr><th>Select</th><th>FileName</th><th>Actual Size</th><th>Last Modified Time</th><th>Actions</th></tr>
 		</thead>
 		<tbody id="srcfilestableBody">
 			<tr><td colspan="4" align="center"> No file Available</td></tr>
@@ -242,7 +253,7 @@ function ConfirmDeleteDialog(ref, message,type){
 	<legend>Compress Files &nbsp;<buttion class="btn" onclick="refreshOutputTable();">Refresh</buttion></legend>
 		<table >
 		<thead>
-			<tr><th>Select</th><th>FileName</th><th>Compress  Size</th><th>Actions</th></tr>
+			<tr><th>Select</th><th>FileName</th><th>Compress  Size</th><th>Last Modified Time</th><th>Actions</th></tr>
 		</thead>
 		<tbody id="targetfilestableBody">
 			<tr><td colspan="4" align="center"> No file Available</td></tr>
