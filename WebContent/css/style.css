@@ -55,3 +55,14 @@ body
     cursor: pointer;
     border-radius: 10px;
 }
+
+.left {
+  float: left; 
+  display: inline;
+}
+
+.right {
+    
+    height:100%;
+    weight:100%;
+}

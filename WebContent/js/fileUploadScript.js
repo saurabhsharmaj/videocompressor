@@ -10,15 +10,7 @@ $(document).ready(function() {
 			uploadProgress : function(event, position, total, percentComplete) {
 				$("#progressbar").width(percentComplete + '%');
 				$("#percent").html(percentComplete + '%');
-				doughnutWidget.render({fileUploaded:{
-					val: percentComplete,
-					color: '#57B4F2',
-					click: function(e) {
-						console.log('hi');
-					}
-				}});
-
-
+				$('#knob').val(percentComplete).trigger('change');
 				// change message text and % to red after 50%
 				if (percentComplete > 50) {
 					$("#message").html("<font color='red'>File Upload is in progress .. </font>");

@@ -6,11 +6,11 @@
 <link rel="shortcut icon" href="data:image/x-icon;," type="image/x-icon"> 
 <!-- Include jQuery form & jQuery script file. -->
 <script src="js/jquery.js" ></script>
+<!--[if IE]><script type="text/javascript" src="js/excanvas.js"></script><![endif]-->
+<script src="js/jquery.knob.min.js"></script>
 <script src="js/jquery-ui.js"></script>
 <script src="js/jquery.form.js" ></script>
 <script src="js/fileUploadScript.js" ></script>
-<script src="js/Chart.min.js"></script>
-  <script src="js/pretty-doughtnut.js"></script>
 <script type="text/javascript">
 $( document ).ready(function() {
 	
@@ -76,15 +76,61 @@ $( document ).ready(function() {
 	
 	$( "#dialog" ).dialog({autoOpen: false,title:'Compress'});	
 	
-	doughnutWidget.options = {
-		    container: $('#container'),
-		    width: 100,
-		    height: 100,
-		    class: 'myClass',
-		    cutout: 50
-		  };
+	renderChart();
 });
 
+function renderChart(){
+	$("#knob").knob({
+        change : function (value) {
+            console.log("change : " + value);
+        },
+        release : function (value) {
+            //console.log(this.$.attr('value'));
+            console.log("release : " + value);
+        },
+        cancel : function () {
+            console.log("cancel : ", this);
+        },
+        /*format : function (value) {
+            return value + '%';
+        },*/
+        draw : function () {
+
+            // "tron" case
+            if(this.$.data('skin') == 'tron') {
+
+                this.cursorExt = 0.3;
+
+                var a = this.arc(this.cv)  // Arc
+                    , pa                   // Previous arc
+                    , r = 1;
+
+                this.g.lineWidth = this.lineWidth;
+
+                if (this.o.displayPrevious) {
+                    pa = this.arc(this.v);
+                    this.g.beginPath();
+                    this.g.strokeStyle = this.pColor;
+                    this.g.arc(this.xy, this.xy, this.radius - this.lineWidth, pa.s, pa.e, pa.d);
+                    this.g.stroke();
+                }
+
+                this.g.beginPath();
+                this.g.strokeStyle = r ? this.o.fgColor : this.fgColor ;
+                this.g.arc(this.xy, this.xy, this.radius - this.lineWidth, a.s, a.e, a.d);
+                this.g.stroke();
+
+                this.g.lineWidth = 2;
+                this.g.beginPath();
+                this.g.strokeStyle = this.o.fgColor;
+                this.g.arc( this.xy, this.xy, this.radius - this.lineWidth + 1 + this.lineWidth * 2 / 3, 0, 2 * Math.PI, false);
+                this.g.stroke();
+
+                return false;
+            }
+        }
+    });
+}
 function deleteFile(ref,type){
 	ConfirmDeleteDialog(ref, 'Are you sure?',type);
 	
@@ -106,14 +152,7 @@ function convertVideo(){
 		    url: 'commonAction?action=status', 
 		    success: function(data) {
 		      $('#result').html(data);
-		      doughnutWidget.render({compress:{
-			      val: parseInt(data),
-			      color: '#57B4F2',
-			      click: function(e) {
-			        console.log('hi');
-			      }
-			    }});
-		      
+		      $('#knob').val(parseInt(data)).trigger('change');
 		      if(parseInt(data) == 100){
 		    	  refreshOutputTable();		    	  
 		      }
@@ -224,19 +263,23 @@ function ConfirmDeleteDialog(ref, message,type){
 	
 	<div id="message"></div>
 	<input type="hidden" id="selectedFile">
+	<div class="left">
 	<form id="UploadForm" action="UploadFile" method="post"
 		enctype="multipart/form-data">
-		<input type="file" size="60" id="myfile" name="myfile"> <input
-			type="submit" value="Upload">
-		<div id="progressbox">
-			<div id="progressbar"></div>
-			<div id="percent">0%</div>
-		</div>
+		
+			<input type="file" size="60" id="myfile" name="myfile"> <input
+				type="submit" value="Upload">
+		
 		<div id="result"></div>
 		<br />
-		<div id="container" class="margin" role="group"></div>
+		
 		<div id="message"></div>
 	</form>
+	</div>
+		<div class="right">
+			<input id="knob" data-width="100%" value="0">
+		</div>
+	<br>
 	<fieldset>
 	<legend>Source Files</legend>
 		<table >
