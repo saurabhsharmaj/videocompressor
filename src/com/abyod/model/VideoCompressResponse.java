@@ -10,19 +10,20 @@ public class VideoCompressResponse {
 	private long size;
 	private String sizeInString;
 	private String path;
-	private long timeTaken;
+	private String timeTaken;
 	private Date lastModifiedTime;
 
 	public VideoCompressResponse() {
 
 	}
 
-	public VideoCompressResponse(String fileName, long size, String path, long lastModifiedTime) {
+	public VideoCompressResponse(String fileName, long size, String path, long lastModifiedTime,String timeTaken) {
 		this.fileName = fileName;
 		this.size = size;
 		this.sizeInString = Utils.humanReadableByteCount(size, false);
 		this.path = path;
 		this.lastModifiedTime = new Date(lastModifiedTime);
+		this.timeTaken = timeTaken;
 	}
 
 	public String getFileName() {
@@ -49,11 +50,11 @@ public class VideoCompressResponse {
 		this.path = path;
 	}
 
-	public long getTimeTaken() {
+	public String getTimeTaken() {
 		return timeTaken;
 	}
 
-	public void setTimeTaken(long timeTaken) {
+	public void setTimeTaken(String timeTaken) {
 		this.timeTaken = timeTaken;
 	}
 

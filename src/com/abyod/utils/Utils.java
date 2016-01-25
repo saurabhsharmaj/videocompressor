@@ -63,8 +63,35 @@ public class Utils {
 		List<VideoCompressResponse> list = new ArrayList<>();
 		for (File file : dir.listFiles()) {
 			BasicFileAttributes attr = Files.readAttributes(dir.toPath(), BasicFileAttributes.class);
-			list.add(new VideoCompressResponse(file.getName(), file.length(), file.getAbsolutePath(), attr.creationTime().toMillis()));
+			String timeTaken = readValue(file.getParentFile().getParentFile(), Utils.getBaseName(file.getName())+".txt");
+			list.add(new VideoCompressResponse(file.getName(), file.length(), file.getAbsolutePath(), attr.creationTime().toMillis(),timeTaken));
 		}
 		return sortFilesByCreationDate(list);
+	}
+
+	private static String readValue(File parentFile, String name) {
+		BufferedReader br = null;
+
+		String elapasedTime = "0";
+		try {
+
+
+			br = new BufferedReader(new FileReader(parentFile+File.separator+name));
+
+			while ((elapasedTime = br.readLine()) != null) {
+				System.out.println(elapasedTime);
+				break;
+			}
+
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (br != null)br.close();
+			} catch (IOException ex) {
+				ex.printStackTrace();
+			}
+		}
+		return elapasedTime;
 	}
 }

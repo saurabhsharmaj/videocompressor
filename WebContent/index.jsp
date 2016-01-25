@@ -62,7 +62,7 @@ $( document ).ready(function() {
 							'<td><input type="checkbox"/></td>'+
 							'<td>'+file.fileName+'</td>'+						
 							'<td>'+file.sizeInString+'</td>'+
-							'<td>'+file.lastModifiedTime+'</td>'+
+							'<td>'+file.timeTaken+'</td>'+
 							'<td><img src="images/trash.png" onclick="deleteFile(this,\'target\');" title="delete file" />'+
 						'</tr>';
 			});
@@ -192,7 +192,7 @@ function refreshOutputTable(){
 							'<td><input type="checkbox"/></td>'+
 							'<td>'+file.fileName+'</td>'+						
 							'<td>'+file.sizeInString+'</td>'+
-							'<td>'+file.lastModifiedTime+'</td>'+
+							'<td>'+file.timeTaken+'</td>'+
 							'<td><img src="images/trash.png" onclick="deleteFile(this,\'target\');" title="delete file" />'+							
 						'</tr>';
 			});
@@ -296,7 +296,7 @@ function ConfirmDeleteDialog(ref, message,type){
 	<legend>Compress Files &nbsp;<buttion class="btn" onclick="refreshOutputTable();">Refresh</buttion></legend>
 		<table >
 		<thead>
-			<tr><th>Select</th><th>FileName</th><th>Compress  Size</th><th>Last Modified Time</th><th>Actions</th></tr>
+			<tr><th>Select</th><th>FileName</th><th>Compress  Size</th><th>Time Elapsed</th><th>Actions</th></tr>
 		</thead>
 		<tbody id="targetfilestableBody">
 			<tr><td colspan="4" align="center"> No file Available</td></tr>
