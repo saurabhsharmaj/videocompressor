@@ -82,7 +82,8 @@ public class CommonActionServlet extends HttpServlet {
 				} else {
 					dir = new File((String) request.getAttribute(VideoCompressorConstant.OUTPUT_DIRECTORY));
 					
-				}				
+				}
+				VideoCompressorService.setProgressStatus(0);
 				response.getWriter().write(dir!=null?new Gson().toJson(Utils.readFiles(dir)):"");
 			} else {
 				response.getWriter().append(request.getContextPath());

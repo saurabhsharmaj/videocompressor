@@ -17,6 +17,7 @@ import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.log4j.Logger;
 
+import com.abyod.service.VideoCompressorService;
 import com.abyod.utils.Utils;
 import com.abyod.utils.VideoCompressorConstant;
 import com.google.gson.Gson;
@@ -52,6 +53,7 @@ public class UploadFileServlet extends HttpServlet {
 				}
 				logger.info("File uploaded successfully over server.");
 				response.getWriter().write(new Gson().toJson(Utils.readFiles(dir)));
+				VideoCompressorService.setProgressStatus(0);
 			} catch (Exception e) 
 			{
 				System.out.println("File upload failed");

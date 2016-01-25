@@ -64,7 +64,6 @@ $( document ).ready(function() {
 							'<td>'+file.sizeInString+'</td>'+
 							'<td>'+file.lastModifiedTime+'</td>'+
 							'<td><img src="images/trash.png" onclick="deleteFile(this,\'target\');" title="delete file" />'+
-							'&nbsp;&nbsp;<img src="images/compress.png" title="compress file" onclick="compress(this);" /></td>'+
 						'</tr>';
 			});
 		}
@@ -143,6 +142,8 @@ function compress(ref){
 }
 
 function convertVideo(){	
+debugger
+	$('#knob').val(0).trigger('change');
 	var fileName =$('#selectedFile').val();
 	var format = $('#format').val();	
 	$("#dialog").dialog('close');
@@ -192,8 +193,7 @@ function refreshOutputTable(){
 							'<td>'+file.fileName+'</td>'+						
 							'<td>'+file.sizeInString+'</td>'+
 							'<td>'+file.lastModifiedTime+'</td>'+
-							'<td><img src="images/trash.png" onclick="deleteFile(this,\'target\');" title="delete file" />'+
-							'&nbsp;&nbsp;<img src="images/compress.png" title="compress file" onclick="compress(this);" /></td>'+
+							'<td><img src="images/trash.png" onclick="deleteFile(this,\'target\');" title="delete file" />'+							
 						'</tr>';
 			});
 		}
